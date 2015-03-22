@@ -21,4 +21,10 @@ public class Centroide {
 		this.titulo = titulo;
 	}
 	
+	public void exibeTermos(){
+		for(int j = 0; j < termos.size(); j++) {
+			System.out.print("(" +termos.get(j).getTermo() + ", " + termos.get(j).getPeso() + ", " + termos.get(j).getnOcorrencias() + "), ");
+		}
+	}
+	
 }

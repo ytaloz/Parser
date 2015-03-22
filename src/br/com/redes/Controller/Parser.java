@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,7 +21,8 @@ public class Parser {
 	
 	private BufferedReader codigo;
 	private Pagina pg = new Pagina();
-	private Centroide centroide = new Centroide();;
+	private Centroide centroide = new Centroide();
+	
 	public Parser(String URL) throws IOException {
 		lerURL(URL);
 	}
@@ -35,16 +35,21 @@ public class Parser {
 		codigo = new BufferedReader(new InputStreamReader(con.getInputStream()));
 	}
 
-	public void filtrarTags() throws IOException {
-		String aux, texto ="";
+	public void filtrarCodigo() throws IOException {
+		String aux, texto ="", titulo = "";
 		while ((aux = codigo.readLine()) != null) {
+//			if(aux.contains("<title>")){
+//				titulo = aux.replace("<title>", "");
+//				titulo = titulo.replace("</title>", "");
+//				pg.setTitulo(titulo.trim());
+//			}
 			texto = texto + aux;
 		}
-		pg.setTexto(texto);
-		processaLinha(texto);
+		
+		processaCodigo(texto);
 	}
 	
-	public void processaLinha(String codigo){
+	public void processaCodigo(String codigo){
 		codigo = codigo.replaceAll("[/./,/:/;/-/'/&/%/?/!/*/+/#]", " ");
 		String tag = "", auxTag = "", term = "";
 		Termo nTermo;
@@ -69,7 +74,6 @@ public class Parser {
 						if( i < codigo.length()){
 							tag = tag + codigo.charAt(i);
 						}
-						
 						if(codigo.charAt(i) == ' '){
 							while(codigo.charAt(i) != '>'){
 								i++;
@@ -117,30 +121,26 @@ public class Parser {
 			}
 			term = "";
 		}
-		
-		for(int j = 0; j < centroide.getTermos().size(); j++) {
-			System.out.print("(" +centroide.getTermos().get(j).getTermo() + ", " + centroide.getTermos().get(j).getPeso() + ", " + centroide.getTermos().get(j).getnOcorrencias() + "), ");
+		centroide.exibeTermos();
+	}
+
+	public int atualizaPeso(String key){
+		int peso = 1;
+		if(key.equals("title")){
+			peso = 10;
+		}else if(key.equals("h1")){
+			peso = 7;
+		}else if(key.equals("h2")){
+			peso = 6;
+		}else if(key.equals("h13") || key.equals("a")){
+			peso = 5;
+		}else if(key.equals("h4") || key.equals("h5") || key.equals("h6")){
+			peso = 4;
+		}else if(key.equals("big") || key.equals("b") || key.equals("em") || key.equals("i") || key.equals("u") || key.equals("strong") || key.equals("strike") || key.equals("center")){
+			peso = 3;
+		}else if(key.equals("small") || key.equals("sub") || key.equals("sup") || key.equals("font") || key.equals("address") || key.equals("meta")){
+			peso = 2;
 		}
+		return peso;
 	}
-
-
-public int atualizaPeso(String key){
-	int peso = 1;
-	if(key.equals("title")){
-		peso = 10;
-	}else if(key.equals("h1")){
-		peso = 7;
-	}else if(key.equals("h2")){
-		peso = 6;
-	}else if(key.equals("h13") || key.equals("a")){
-		peso = 5;
-	}else if(key.equals("h4") || key.equals("h5") || key.equals("h6")){
-		peso = 4;
-	}else if(key.equals("big") || key.equals("b") || key.equals("em") || key.equals("i") || key.equals("u") || key.equals("strong") || key.equals("strike") || key.equals("center")){
-		peso = 3;
-	}else if(key.equals("small") || key.equals("sub") || key.equals("sup") || key.equals("font") || key.equals("address") || key.equals("meta")){
-		peso = 2;
-	}
-	return peso;
-}
 }

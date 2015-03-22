@@ -11,19 +11,22 @@ public class Centroide {
 	public ArrayList<Termo> getTermos() {
 		return termos;
 	}
+	
 	public void addTermo(Termo termo) {
 		this.termos.add(termo);
 	}
+	
 	public String getTitulo() {
 		return titulo;
 	}
+	
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
 	}
 	
 	public void exibeTermos(){
-		for(int j = 0; j < termos.size(); j++) {
-			System.out.print("(" +termos.get(j).getTermo() + ", " + termos.get(j).getPeso() + ", " + termos.get(j).getnOcorrencias() + "), ");
+		for(Termo auxTerm : termos) {
+			System.out.println("(" + auxTerm.getTermo() + ", " + auxTerm.getPeso() + ", " + auxTerm.getnOcorrencias() + "), ");
 		}
 	}
 	

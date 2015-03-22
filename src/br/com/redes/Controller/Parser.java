@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.List;
 
@@ -50,7 +51,9 @@ public class Parser {
 	}
 	
 	public void processaCodigo(String codigo){
+		codigo = codigo.toLowerCase();
 		codigo = codigo.replaceAll("[/./,/:/;/-/'/&/%/?/!/*/+/#]", " ");
+		codigo = removeAcentos(codigo);
 		String tag = "", auxTag = "", term = "";
 		Termo nTermo;
 		boolean contem = false;
@@ -143,4 +146,11 @@ public class Parser {
 		}
 		return peso;
 	}
+	
+	public String removeAcentos(String str) {
+		  str = Normalizer.normalize(str, Normalizer.Form.NFD);
+		  str = str.replaceAll("[^\\p{ASCII}]", "");
+		  return str;
+		 
+		}
 }

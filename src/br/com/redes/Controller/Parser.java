@@ -105,6 +105,7 @@ public class Parser {
 			}
 			term = "";
 		}
+		
 		for(int j = 0; j < centroide.getTermos().size(); j++) {
 			System.out.print("(" +centroide.getTermos().get(j).getTermo() + ", " + centroide.getTermos().get(j).getPeso() + ", " + centroide.getTermos().get(j).getnOcorrencias() + "), ");
 		}

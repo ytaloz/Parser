@@ -152,5 +152,5 @@ public class Parser {
 		  str = str.replaceAll("[^\\p{ASCII}]", "");
 		  return str;
 		 
-		}
+	}
 }

@@ -39,11 +39,6 @@ public class Parser {
 	public void filtrarCodigo() throws IOException {
 		String aux, texto ="", titulo = "";
 		while ((aux = codigo.readLine()) != null) {
-//			if(aux.contains("<title>")){
-//				titulo = aux.replace("<title>", "");
-//				titulo = titulo.replace("</title>", "");
-//				pg.setTitulo(titulo.trim());
-//			}
 			texto = texto + aux;
 		}
 		
@@ -52,32 +47,35 @@ public class Parser {
 	
 	public void processaCodigo(String codigo){
 		codigo = codigo.toLowerCase();
-		codigo = codigo.replaceAll("[/./,/:/;/-/'/&/%/?/!/*/+/#]", " ");
 		codigo = removeAcentos(codigo);
 		String tag = "", auxTag = "", term = "";
 		Termo nTermo;
-		boolean contem = false;
-		int peso = 0;
+		boolean contem = false, iniciaCaptura = false;
 		for(int i= 0; i < codigo.length(); i++){
+			
 			if(codigo.charAt(i) == '<'){
 				i++;
-				if(codigo.charAt(i) == '/'){
+				if(codigo.charAt(i) == '/' ){
 					i++;
-					while(codigo.charAt(i) != '>' && codigo.charAt(i) != ' ' ){
+					while(codigo.charAt(i) != '>' ){
 						if( i < codigo.length()){
 							tag = tag + codigo.charAt(i);
 						}
 						i++;
 					}
-					if(!tag.equals("")){
-						peso = peso - atualizaPeso(tag);
+					if(tag.equals("title")){
+						iniciaCaptura = false;
 					}
+					if(tag.equals("script")){
+						iniciaCaptura = true;
+					}
+//					System.out.println(tag);
 				}else{
 					while(codigo.charAt(i) != '>'){
 						if( i < codigo.length()){
 							tag = tag + codigo.charAt(i);
 						}
-						if(codigo.charAt(i) == ' '){
+						if(codigo.charAt(i) == ' ' || tag.equals("script")){
 							while(codigo.charAt(i) != '>'){
 								i++;
 							}
@@ -85,15 +83,23 @@ public class Parser {
 						}	
 						i++;
 					}
-					if(!tag.equals("")){
-						peso = peso + atualizaPeso(tag);
-					}
+					
+				}
+				
+				if(tag.equals("title") || tag.equals("body")){
+					iniciaCaptura = true;
+				}
+				
+				if(tag.equals("script")){
+					iniciaCaptura = false;
 				}
 				auxTag = tag;
 				tag = "";
 			}else{
 				while(codigo.charAt(i) != ' '){
-					term = term + codigo.charAt(i);			
+					term = term + codigo.charAt(i);
+					term = term.replaceAll("[/./,/:/;/-/'/&/%/?/!/*/+/#/(/)/|]", " ");
+					term = term.trim();
 					i++;
 					if(codigo.charAt(i) == '<' || codigo.charAt(i) == '>'){
 						i--;
@@ -101,7 +107,7 @@ public class Parser {
 					}
 				}
 
-				if(!listaPt.contains(term) && !listaEn.contains(term)){
+				if(!listaPt.contains(term) && !listaEn.contains(term) && iniciaCaptura){
 					nTermo = new Termo(atualizaPeso(auxTag), term);
 					if(!term.equals("")){
 						contem = false;

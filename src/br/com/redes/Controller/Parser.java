@@ -48,7 +48,7 @@ public class Parser {
 	public void processaCodigo(String codigo){
 		codigo = codigo.toLowerCase();
 		codigo = removeAcentos(codigo);
-		String tag = "", auxTag = "", term = "";
+		String tag = "", auxTag = "", term = "", titulo = "";
 		Termo nTermo;
 		boolean contem = false, iniciaCaptura = false;
 		for(int i= 0; i < codigo.length(); i++){
@@ -72,24 +72,23 @@ public class Parser {
 //					System.out.println(tag);
 				}else{
 					while(codigo.charAt(i) != '>'){
-						if( i < codigo.length()){
-							tag = tag + codigo.charAt(i);
-						}
+						
 						if(codigo.charAt(i) == ' ' || tag.equals("script")){
 							while(codigo.charAt(i) != '>'){
 								i++;
 							}
 							break;
 						}	
+						if( i < codigo.length()){
+							tag = tag + codigo.charAt(i);
+						}
 						i++;
-					}
-					
+					}		
 				}
 				
 				if(tag.equals("title") || tag.equals("body")){
 					iniciaCaptura = true;
 				}
-				
 				if(tag.equals("script")){
 					iniciaCaptura = false;
 				}
@@ -106,9 +105,15 @@ public class Parser {
 						break;
 					}
 				}
-
-				if(!listaPt.contains(term) && !listaEn.contains(term) && iniciaCaptura){
+				
+				if(auxTag.equals("title")){
+					titulo = titulo.trim() +" "+ term.trim();
+				}
+				
+				if(!listaPt.contains(term) && !listaEn.contains(term) && iniciaCaptura){	
+					
 					nTermo = new Termo(atualizaPeso(auxTag), term);
+					
 					if(!term.equals("")){
 						contem = false;
 						for (Termo auxTerm : centroide.getTermos()){
@@ -125,11 +130,14 @@ public class Parser {
 							centroide.addTermo(nTermo);
 						}
 					}
-				}			
+				}	
+				
+				pg.setTitulo(titulo);
 				
 			}
 			term = "";
 		}
+		System.out.println(pg.getTitulo());
 		centroide.exibeTermos();
 	}
 

@@ -55,7 +55,7 @@ public class Parser {
 			
 			if(codigo.charAt(i) == '<'){
 				i++;
-				if(codigo.charAt(i) == '!' || tag.equals("meta") || tag.equals("style")){
+				if(tag.equals("meta") || tag.equals("style")){
 					iniciaCaptura = false;
 					while(codigo.charAt(i) != '>'){
 						i++;
@@ -122,7 +122,6 @@ public class Parser {
 						for (Termo auxTerm : centroide.getTermos()){
 							if(auxTerm.getTermo().equals(term)){
 								int indice = centroide.getTermos().indexOf(auxTerm);
-//								System.out.println(auxTag);
 								centroide.getTermos().get(indice).setPeso(centroide.getTermos().get(indice).getPeso() + atualizaPeso(auxTag));
 								centroide.getTermos().get(indice).addOcorrencias();
 								contem = true;
@@ -142,12 +141,6 @@ public class Parser {
 			}
 			term = "";
 		}
-		System.out.println("Titulo da pagina: " + pg.getTitulo());
-		System.out.println("Texto da pagina: " + pg.getTexto());
-		System.out.println("Numero de termos: " + centroide.getNumTermos());
-		System.out.println("Numero de termos Distitntos: " + centroide.getNumTermosDistintos());
-		System.out.println("Centroide:");
-		centroide.exibeTermos();
 	}
 
 	public int atualizaPeso(String key){
@@ -173,7 +166,18 @@ public class Parser {
 	public String removeAcentos(String str) {
 		  str = Normalizer.normalize(str, Normalizer.Form.NFD);
 		  str = str.replaceAll("[^\\p{ASCII}]", "");
-		  return str;
-		 
+		  return str;	 
+	}
+	
+	public String getTitle(){
+		return pg.getTitulo();
+	}
+	
+	public Centroide getCentroide(){
+		return centroide;
+	}
+	
+	public Pagina getPagina(){
+		return pg;
 	}
 }

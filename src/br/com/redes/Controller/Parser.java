@@ -117,10 +117,7 @@ public class Parser {
 				if(!listaPt.contains(term) && !listaEn.contains(term) && iniciaCaptura){	
 					
 					nTermo = new Termo(atualizaPeso(auxTag), term);
-					
 					if(!term.equals("") && !term.equals("-")){
-						String auxText = pg.getTexto() + " " + term;
-						pg.setTexto(auxText);
 						contem = false;
 						for (Termo auxTerm : centroide.getTermos()){
 							if(auxTerm.getTermo().equals(term)){
@@ -134,6 +131,8 @@ public class Parser {
 						}
 						if(!contem){
 							centroide.addTermo(nTermo);
+							String auxText = pg.getTexto() + " " + term;
+							pg.setTexto(auxText);
 						}
 					}
 				}	

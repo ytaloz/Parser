@@ -30,4 +30,16 @@ public class Centroide {
 		}
 	}
 	
+	public int getNumTermosDistintos(){
+		return termos.size();
+	}
+	public int getNumTermos(){
+		int nTermos = 0;
+		for(Termo auxTerm : termos) {
+			nTermos = nTermos + auxTerm.getnOcorrencias();
+			
+		}
+		return nTermos;
+	}
+	
 }

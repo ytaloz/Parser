@@ -55,6 +55,12 @@ public class Parser {
 			
 			if(codigo.charAt(i) == '<'){
 				i++;
+				if(codigo.charAt(i) == '!' || tag.equals("meta") || tag.equals("style")){
+					iniciaCaptura = false;
+					while(codigo.charAt(i) != '>'){
+						i++;
+					}
+				}
 				if(codigo.charAt(i) == '/' ){
 					i++;
 					while(codigo.charAt(i) != '>' ){
@@ -65,14 +71,12 @@ public class Parser {
 					}
 					if(tag.equals("title")){
 						iniciaCaptura = false;
-					}
-					if(tag.equals("script")){
+					}else if(tag.equals("script")){
 						iniciaCaptura = true;
 					}
-//					System.out.println(tag);
+				
 				}else{
 					while(codigo.charAt(i) != '>'){
-						
 						if(codigo.charAt(i) == ' ' || tag.equals("script")){
 							while(codigo.charAt(i) != '>'){
 								i++;
@@ -114,7 +118,9 @@ public class Parser {
 					
 					nTermo = new Termo(atualizaPeso(auxTag), term);
 					
-					if(!term.equals("")){
+					if(!term.equals("") && !term.equals("-")){
+						String auxText = pg.getTexto() + " " + term;
+						pg.setTexto(auxText);
 						contem = false;
 						for (Termo auxTerm : centroide.getTermos()){
 							if(auxTerm.getTermo().equals(term)){
@@ -137,7 +143,11 @@ public class Parser {
 			}
 			term = "";
 		}
-		System.out.println(pg.getTitulo());
+		System.out.println("Titulo da pagina: " + pg.getTitulo());
+		System.out.println("Texto da pagina: " + pg.getTexto());
+		System.out.println("Numero de termos: " + centroide.getNumTermos());
+		System.out.println("Numero de termos Distitntos: " + centroide.getNumTermosDistintos());
+		System.out.println("Centroide:");
 		centroide.exibeTermos();
 	}
 
